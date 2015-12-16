@@ -1,20 +1,39 @@
-<?php
-/* @var $this SiteController */
 
-$this->pageTitle=Yii::app()->name;
-?>
-
-<h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
-
-<p>Congratulations! You have successfully created your Yii application.</p>
-
-<p>You may change the content of this page by modifying the following two files:</p>
-<ul>
-	<li>View file: <code><?php echo __FILE__; ?></code></li>
-	<li>Layout file: <code><?php echo $this->getLayoutFile('main'); ?></code></li>
-</ul>
-
-<p>For more details on how to further develop this application, please read
-the <a href="http://www.yiiframework.com/doc/">documentation</a>.
-Feel free to ask in the <a href="http://www.yiiframework.com/forum/">forum</a>,
-should you have any questions.</p>
+<?php 
+        foreach ($model as $key => $value) {
+            ?>
+                <li class="portfolio-item2" data-id="id-0" data-type="cat-item-3">  
+              <div class="panel panel-default">
+                
+                         <div class="panel-heading">
+                                <h4><i class="fa fa-fw fa-check"></i>
+                                <div class="event_title">
+                                <span class="glyphicon glyphicon-bookmark"></span>
+                                    <?php 
+                                    if(strlen($value->event_title)>50){
+                                        $res = substr($value->event_title,0,50);
+                                     echo $res."...";   
+                                    }else{
+                                    echo $value->event_title;
+                                    }
+                                ?> 
+                                </div>
+                               
+                                </h4>
+                        </div>   
+                                 
+                <span class="image-block">
+                  <a href="/Site/ShowDetail/?id=<?=$value->event_id?>" class="img-responsive img-portfolio img-hover"><img width="225" height="140" src="<?php echo $value->event_image ?>"/>                    
+                  </a>
+                </span>
+                <div class="panel-body">
+                <div class="home-portfolio-text">
+                  <p><span class="glyphicon glyphicon-calendar"></span><?php echo $value->event_date ?></p>
+                </div>
+                </div>
+              </div>    
+            </li>   
+            <?
+         } 
+ ?>
+      

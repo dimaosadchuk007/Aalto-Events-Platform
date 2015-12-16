@@ -9,45 +9,29 @@ $this->breadcrumbs=array(
 );
 ?>
 
-<h1>Login</h1>
+<div class="row">
+    <div class="col-sm-6 col-md-4 col-md-offset-4">
+        <h1 class="text-center login-title">Sign in</h1>
+        <div class="account-wall">
+            <img class="profile-img" src="/upload/login_logo.jpg"alt="">
+			<?php $form=$this->beginWidget('CActiveForm', array(
+				'id'=>'login-form',
+				'enableClientValidation'=>true,
+				'clientOptions'=>array(
+					'validateOnSubmit'=>true,
+				),
+				'htmlOptions' => array(
+					'class' => 'form-signin',
+				),
+			)); ?>
 
-<p>Please fill out the following form with your login credentials:</p>
+			<?php echo $form->textField($model,'username',array('class'=>'form-control','required'=>'required','autofocus'=>'autofocus', 'placeholder'=>'Login')); ?>
+			<?php echo $form->passwordField($model,'password',array('class'=>'form-control', 'placeholder'=>'Password')); ?>
+			<?php echo CHtml::submitButton('Sign in',array('class'=>'btn btn-lg btn-primary btn-block')); ?>
+	        <?php echo $form->checkBox($model,'rememberMe'); ?>
+	        <?php echo $form->label($model,'rememberMe',array('class'=>'checkbox pull-left')); ?>
 
-<div class="form">
-<?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'login-form',
-	'enableClientValidation'=>true,
-	'clientOptions'=>array(
-		'validateOnSubmit'=>true,
-	),
-)); ?>
-
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'username'); ?>
-		<?php echo $form->textField($model,'username'); ?>
-		<?php echo $form->error($model,'username'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'password'); ?>
-		<?php echo $form->passwordField($model,'password'); ?>
-		<?php echo $form->error($model,'password'); ?>
-		<p class="hint">
-			Hint: You may login with <kbd>demo</kbd>/<kbd>demo</kbd> or <kbd>admin</kbd>/<kbd>admin</kbd>.
-		</p>
-	</div>
-
-	<div class="row rememberMe">
-		<?php echo $form->checkBox($model,'rememberMe'); ?>
-		<?php echo $form->label($model,'rememberMe'); ?>
-		<?php echo $form->error($model,'rememberMe'); ?>
-	</div>
-
-	<div class="row buttons">
-		<?php echo CHtml::submitButton('Login'); ?>
-	</div>
-
-<?php $this->endWidget(); ?>
-</div><!-- form -->
+			<?php $this->endWidget(); ?>
+		</div>
+    </div>
+</div>

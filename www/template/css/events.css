@@ -217,68 +217,98 @@ footer p {
 
 /* styles for admin page */
 .nav_admin ul li{
-    color:black;
-    width:100%;
+    color: black;
+    width: 100%;
     text-align: center;
-    margin:0;
+    margin: 0;
 
 }
 .nav_admin ul li a{
         font-size: 16px;
-        padding:20px 45px;
-        margin:0; 
+        padding: 20px 45px;
+        margin: 0; 
 }
 .avatar img{
     display: block;
-    width:150px;
-    height:150px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    margin:10px auto;
+    margin: 10px auto;
     
 }
 .avatar img:hover{
-    border:5px solid #BDBDBD;
-    transition:all 0.1s;
+    border: 5px solid #BDBDBD;
+    transition: all 0.1s;
 }
 
-.blockType input, .blockType select{
+.blockType input, .blockType select, .blockType textarea{
     display: block;
-    min-width:60%;
-    margin:0 0;
-    padding:5px 20px;
+    min-width: 60%;
+    margin: 0 0;
+    padding: 5px 20px;
     border: none;
     outline: none;
-    border:1px solid #444;
+    border: 1px solid #444;
     border-radius: 5px;
 
 }.typeText, .typePassword, .typeSelect{
-    padding:5px 0px;
+    padding: 5px 0px;
     font-size: 15px;
 }
+.blockType textarea{
+    min-width: 68%;
+}
+.imageUpload input{
+    border: none;
+}
+
 .typeSubmit{
-    width:60%;
-    color:white;
+    width: 60%;
+    color: white;
     padding: 10px 25px;
     background-color: #343f33;
 }
-.list{
+/* .list{
     width: 100%;
     padding:5px;
     margin: 20px 0;
     border: 1px solid #707070;
 
+} */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 5px;
+    margin: 20px 0;
+    border: 1px solid #707070;
 }
 .list tr{
-    margin:10px 0;
+    margin: 10px 0;
+    width: 80px;
 }
-.list tr td{
+.list tr td, th{
     border: 1px solid #707070;
     padding: 5px 15px;
+}
+.list tr th{
+    text-align: center;
+}
+.list tr td .description{
+    display: block; 
+    height: 150px; 
+    width: 300px; 
+    overflow-y: scroll; 
+}.list tr td .title, .image{
+    display: block; 
+    height: 150px; 
+    width: 150px;
+    overflow: hidden; 
+
 }
 .list tr td:first-child, .list tr:first-child{
     text-align: center;
     background-color: black;
-    color:white;
+    color: white;
 }
 
 .contentNav a{
@@ -286,16 +316,16 @@ footer p {
     margin: 0 10px 0 0;
     background-color: black;
     text-decoration: none;
-    color:white;
+    color: white;
 }
 .buttonInForm input{
     margin-top: 20px;
     display: block;
-    background:black;
-    color:white;
-    outline:0;
+    background: black;
+    color: white;
+    outline: 0;
     border: 0;
-    width:80px;
+    width:8 0px;
     height: 30px;
 }
 .form{

@@ -15,7 +15,7 @@ class TagsController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+		//	'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 
@@ -24,20 +24,12 @@ class TagsController extends Controller
 	 * This method is used by the 'accessControl' filter.
 	 * @return array access control rules
 	 */
-	public function accessRules()
+		public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
-				'users'=>array('*'),
-			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','index','view','admin','delete'),
 				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -51,9 +43,15 @@ class TagsController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
+		}else{
+			$this->redirect('/site');
+		}	
+		
 	}
 
 	/**
@@ -62,21 +60,28 @@ class TagsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Tags;
+		
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=new Tags;
+			
 		if(isset($_POST['Tags']))
-		{
-			$model->attributes=$_POST['Tags'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->tags_id));
-		}
+			{
+				$model->attributes=$_POST['Tags'];
+				if($model->save())
+					$this->redirect(array('/admin/tags/'));
+			}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+			$this->render('create',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -86,21 +91,26 @@ class TagsController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=$this->loadModel($id);
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Tags']))
-		{
-			$model->attributes=$_POST['Tags'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->tags_id));
+			if(isset($_POST['Tags']))
+			{
+				$model->attributes=$_POST['Tags'];
+				if($model->save())
+					$this->redirect(array('view','id'=>$model->tags_id));
+			}
+
+			$this->render('update',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
 		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
 	}
 
 	/**
@@ -108,13 +118,23 @@ class TagsController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+/*	public function actionDelete($id)
 	{
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}*/
+	public function actionDelete($id)
+	{
+		$group = $this->getUserGroup();
+		if($group == 1){
+			Tags::model()->deleteByPk($id);
+			$this->redirect(array('/admin/tags/'));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -122,24 +142,17 @@ class TagsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$events = Events::model()->findAll();// витягнули всі дані і вивели йопта. працює
-/*		echo "<pre>";
-		var_dump($events);
-
-		die();*/
-
-
-
-		if (isset($_POST['text'])) {
-			echo $_POST['text'];
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$events = Events::model()->findAll();// витягнули всі дані і вивели йопта. працює
+			$dataProvider=new CActiveDataProvider('Tags');
+			$this->render('index',array(
+				'dataProvider'=>$dataProvider,
+				'dataEvents'=>$events,
+			));
 		}else{
-			echo "fuck";
+			$this->redirect('/site');
 		}
-		$dataProvider=new CActiveDataProvider('Tags');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-			'dataEvents'=>$events,
-		));
 	}
 
 	/**
@@ -147,14 +160,19 @@ class TagsController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Tags('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Tags']))
-			$model->attributes=$_GET['Tags'];
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=new Tags('search');
+			$model->unsetAttributes();  // clear any default values
+			if(isset($_GET['Tags']))
+				$model->attributes=$_GET['Tags'];
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+			$this->render('admin',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -183,5 +201,10 @@ class TagsController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+	public function getUserGroup(){
+		$model = Users::model()->findByAttributes(array('user_login'=>trim(Yii::app()->user->id)));
+		return $model->group;
 	}
 }

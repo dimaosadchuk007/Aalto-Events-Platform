@@ -50,7 +50,7 @@
                         <a href="/admin/users/">Users</a>
                     </li>
                       <li>
-                        <a href="#">Categories</a>
+                        <a href="/admin/events">Events</a>
                     </li>
                     
                 </ul>

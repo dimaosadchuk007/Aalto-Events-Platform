@@ -37,12 +37,11 @@
 		<?php echo $form->error($model,'user_name'); ?>
 	</div>
 
-	<div class="row typeText">
-		<?php echo $form->labelEx($model,'user_avatar'); ?>
-		<?php echo $form->textField($model,'user_avatar',array('size'=>20,'maxlength'=>20)); ?>
-		<?php echo $form->error($model,'user_avatar'); ?>
-	</div>
-
+<div class="row imageUpload">
+	<?php echo $form->labelEx($model, 'user_avatar') ?>
+	<?php echo $form->fileField($model, 'user_avatar')?>
+	<?php echo $form->error($model, 'user_avatar') ?> 
+</div> 
 	<div class="row typeText">
 		<?php echo $form->labelEx($model,'user_login'); ?>
 		<?php echo $form->textField($model,'user_login',array('size'=>45,'maxlength'=>45)); ?>

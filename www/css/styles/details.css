@@ -1,0 +1,26 @@
+
+
+body {
+    padding-top: 70px;     
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.navbar{
+	background: #BDBDBD;
+}
+.panel-body{
+	color: black;
+}
+#map{
+	width: 440px;
+    height: 250px;
+}
+.intem_list{
+	border-bottom: 1px solid rgba(0,0,0,.00001);
+}
+.intem_list:hover{
+	border-bottom: 1px solid #ccc;
+}

@@ -22,10 +22,10 @@ $this->breadcrumbs=array(
 		} ?>
 */ 
 -->
-<form action="" method="post">
+<!-- <form action="" method="post">
 	<input type="text" name="text" value="hello world motherfucker">
 	<input type="submit" name="sub" value="submit">
-</form>
+</form> -->
 
 <table class="list">
 	<tr>
@@ -33,7 +33,7 @@ $this->breadcrumbs=array(
 		<td>Categories</td>
 		<td>Edit</td>
 		<td>Delete</td>
-		<td>View</td>
+		<!-- <td>View</td> -->
 	</tr>
 
 <?php $this->widget('zii.widgets.CListView', array(

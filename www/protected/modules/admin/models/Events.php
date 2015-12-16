@@ -22,6 +22,7 @@ class Events extends CActiveRecord
 	/**
 	 * @return string the associated database table name
 	 */
+	public $image;
 	public function tableName()
 	{
 		return 'events';
@@ -35,10 +36,14 @@ class Events extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('event_title, event_description, event_image, event_date', 'required'),
-			array('event_title, event_image', 'length', 'max'=>255),
+			array('event_title, event_description, event_date', 'required'),
+			array('event_title', 'length', 'max'=>255),
 			array('event_x, event_y', 'length', 'max'=>5),
 			array('event_date', 'length', 'max'=>20),
+			array('image', 'file', 'types'=>'jpg,jpeg, gif, png', 'maxSize'=>1024 * 1024 * 5,
+                                'tooLarge'=>'The file was larger than 5MB. Please upload a smaller file.',
+                                'wrongType'=>'Please upload only images in the format jpg, gif, png','safe' => false),
+			
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('event_id, event_title, event_description, event_image, event_x, event_y, event_date', 'safe', 'on'=>'search'),
@@ -65,13 +70,14 @@ class Events extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'event_id' => 'Event',
-			'event_title' => 'Event Title',
-			'event_description' => 'Event Description',
-			'event_image' => 'Event Image',
-			'event_x' => 'Event X',
-			'event_y' => 'Event Y',
-			'event_date' => 'Event Date',
+			'event_id' => 'id',
+			'event_title' => 'Title',
+			'event_description' => 'Description',
+/*			'event_image' => 'image',*/
+			'event_x' => 'X',
+			'event_y' => 'Y',
+			'event_date' => 'Date',
+			'image'=>'Picture',
 		);
 	}
 

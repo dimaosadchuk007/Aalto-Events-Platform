@@ -9,9 +9,6 @@ $this->breadcrumbs=array(
 
 <h1>Users</h1>
 
-
-
-
 <table class="list">
 	<tr>
 		<td>User id</td>
@@ -21,6 +18,9 @@ $this->breadcrumbs=array(
 		<td>Avatar</td>
 		<td>Login</td>
 		<td>Group</td>
+		<td>Edit</td>
+		<td>Delete</td>
+	<!-- 	<td>View</td> -->
 	</tr>
 
 <?php $this->widget('zii.widgets.CListView', array(

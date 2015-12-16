@@ -34,13 +34,13 @@ class Users extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_email, user_password, user_name, user_avatar, user_login, group', 'required'),
+			array('user_email, user_password, user_name, user_login, group', 'required'),
 			array('user_email, user_password, user_name, user_login', 'length', 'max'=>45),
-			array('user_avatar', 'length', 'max'=>20),
+			array('user_avatar', 'file', 'types'=>'jpg,jpeg, gif, png'),
 			array('group', 'length', 'max'=>1),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('user_id, user_email, user_password, user_name, user_avatar, user_login, group', 'safe', 'on'=>'search'),
+			array('user_id, user_email, user_password, user_name, user_login, group', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,7 +95,6 @@ class Users extends CActiveRecord
 		$criteria->compare('user_email',$this->user_email,true);
 		$criteria->compare('user_password',$this->user_password,true);
 		$criteria->compare('user_name',$this->user_name,true);
-		$criteria->compare('user_avatar',$this->user_avatar,true);
 		$criteria->compare('user_login',$this->user_login,true);
 		$criteria->compare('group',$this->group,true);
 

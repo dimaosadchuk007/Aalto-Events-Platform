@@ -3,6 +3,7 @@
 class UsersController extends Controller
 {
 	public $layout = 'admin.views.layouts.main';
+	
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -16,7 +17,7 @@ class UsersController extends Controller
 	{
 		return array(
 			'accessControl', // perform access control for CRUD operations
-			'postOnly + delete', // we only allow deletion via POST request
+		//	'postOnly + delete', // we only allow deletion via POST request
 		);
 	}
 	public function actionHello(){
@@ -33,17 +34,9 @@ class UsersController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','hello'),
-				'users'=>array('*'),
-			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('create','update','index','view','admin','delete'),
 				'users'=>array('@'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -57,53 +50,48 @@ class UsersController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$this->render('view',array(
+				'model'=>$this->loadModel($id),
+			));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
+
 	public function actionCreate()
 	{
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=new Users;
+			$date = strtotime(date("d.m.Y H:i:s"));
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
 
-		//date
-		/*$current_time = strtotime(date("d-m-Y H:i:s"));
-		echo date("d-m-Y H:i:s",$current_time);
-		
-		die();*/
-		//end date
-		/*if (isset($_POST['Users'])) {
-			$model->attributes=$_POST['Users']."<br>";
-			echo $_POST['Users']['user_email']."<br>";
-			echo $_POST['Users']['user_password']."<br>";
-			echo $_POST['Users']['user_name']."<br>";
-			echo $_POST['Users']['user_avatar']."<br>";
-			echo $_POST['Users']['user_login']."<br>";
-			echo $_POST['Users']['group']."<br>";
-			echo date("d-m-Y H:i:s",strtotime(date("d-m-Y H:i:s")))."<br>";
-			die();
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->user_id));
+			if(isset($_POST['Users']))
+			{
+				$model->attributes=$_POST['Users'];
+				$uploadedFile = CUploadedFile::getInstance($model,'user_avatar');
+				$model->user_avatar = '/upload'.$date.$uploadedFile;
+				if($model->save()){
+					$path = Yii::getPathOfAlias('webroo').'/upload/'.$date.$uploadedFile;
+					$uploadedFile->saveAs($path);
+					$this->redirect(array('/admin/users/'));
+				}
+			}
+
+			$this->render('create',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
 		}
-*/
-		$model=new Users;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Users']))
-		{
-			$model->attributes=$_POST['Users'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->user_id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
 	}
 
 	/**
@@ -113,21 +101,37 @@ class UsersController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=$this->loadModel($id);
+			$date = date_format(new DateTime(), 'Y-m-d-H-i-s');
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
+			$imageTmp = $model->user_avatar;
+			if(isset($_POST['Users']))
+			{
+				$model->attributes=$_POST['Users'];
+				$uploadedFile = CUploadedFile::getInstance($model,'user_avatar');
 
-		if(isset($_POST['Users']))
-		{
-			$model->attributes=$_POST['Users'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->user_id));
+			if (!empty($uploadedFile)) {
+					$model->user_avatar = '/upload/'.$date.$uploadedFile;
+						$uploadedFile->saveAs(Yii::getPathOfAlias('webroot').'/upload/'.$date.$uploadedFile);
+			}else{
+				$model->user_avatar=$imageTmp;
+			}
+
+
+				if($model->save())
+					$this->redirect(array('view','id'=>$model->user_id));
+			}
+
+			$this->render('update',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
 		}
-
-		$this->render('update',array(
-			'model'=>$model,
-		));
 	}
 
 	/**
@@ -135,13 +139,24 @@ class UsersController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+/*	public function actionDelete($id)
 	{
 		$this->loadModel($id)->delete();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
 			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+	}*/
+
+	public function actionDelete($id)
+	{
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$this->loadModel($id)->delete();
+			$this->redirect(array('/admin/users/'));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -149,10 +164,15 @@ class UsersController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Users');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$dataProvider=new CActiveDataProvider('Users');
+			$this->render('index',array(
+				'dataProvider'=>$dataProvider,
+			));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -160,14 +180,19 @@ class UsersController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Users('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Users']))
-			$model->attributes=$_GET['Users'];
+		$group = $this->getUserGroup();
+		if($group == 1){
+			$model=new Users('search');
+			$model->unsetAttributes();  // clear any default values
+			if(isset($_GET['Users']))
+				$model->attributes=$_GET['Users'];
 
-		$this->render('admin',array(
-			'model'=>$model,
-		));
+			$this->render('admin',array(
+				'model'=>$model,
+			));
+		}else{
+			$this->redirect('/site');
+		}
 	}
 
 	/**
@@ -196,5 +221,11 @@ class UsersController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+
+
+	public function getUserGroup(){
+		$model = Users::model()->findByAttributes(array('user_login'=>trim(Yii::app()->user->id)));
+		return $model->group;
 	}
 }

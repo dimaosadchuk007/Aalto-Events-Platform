@@ -15,3 +15,5 @@ in the "<?php echo $this->module->id; ?>" module.
 <p>
 You may customize this page by editing <tt><?php echo __FILE__; ?></tt>
 </p>
+<img src=" <?=$data->event_image ?>" alt="show me image please">
+ <?=$data->event_image ?>
